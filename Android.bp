@@ -305,6 +305,7 @@ android_library {
         "SystemUISharedLib",
         "Launcher3CommonDepsLib",
         "QuickstepResLib",
+        "vendor_support",
     ],
     manifest: "quickstep/AndroidManifest.xml",
     platform_apis: true,
