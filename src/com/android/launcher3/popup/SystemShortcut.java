@@ -233,6 +233,29 @@ public abstract class SystemShortcut<T extends Context & ActivityContext> extend
             AbstractFloatingView.closeAllOpenViews(mTarget);
         }
     }
+    public static final Factory<BaseDraggingActivity> UNINSTALL = (activity, itemInfo) -> {
+        final String packageName = itemInfo.getTargetPackage();
+        if (packageName == null) return null;
+        return PackageManagerHelper.isSystemApp(activity, packageName)
+            ? null : new UnInstall(activity, itemInfo);
+    };
+
+    public static class UnInstall extends SystemShortcut<BaseDraggingActivity> {
+
+        public UnInstall(BaseDraggingActivity target, ItemInfo itemInfo) {
+            super(R.drawable.ic_uninstall_no_shadow, R.string.uninstall_drop_target_label,
+                    target, itemInfo);
+        }
+
+        @Override
+        public void onClick(View view) {
+            String packageName = mItemInfo.getTargetComponent().getPackageName();
+            Intent intent = new PackageManagerHelper(
+                    view.getContext()).getUninstallIntent(packageName);
+            mTarget.startActivitySafely(view, intent, mItemInfo);
+            AbstractFloatingView.closeAllOpenViews(mTarget);
+        }
+    }
 
     public static <T extends Context & ActivityContext> void dismissTaskMenuView(T activity) {
         AbstractFloatingView.closeOpenViews(activity, true,
